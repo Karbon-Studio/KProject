@@ -42,11 +42,7 @@ public class DynamicLight : MonoBehaviour
     // Called at beginning of script execution
     void Start()
     {
-
         
-
-
-
         //-- Step 1: obtain all active meshes in the scene --//
         //---------------------------------------------------------------------//
 
