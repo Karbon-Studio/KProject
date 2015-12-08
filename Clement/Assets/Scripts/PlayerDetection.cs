@@ -22,6 +22,7 @@ public class PlayerDetection : MonoBehaviour
                 RaycastHit2D hit = Physics2D.Raycast(transform.position, player.transform.position);
                 if (hit.collider.tag == player.tag)  // si le joueur est touchable par la lumiere dans le collider
                     Application.LoadLevel(0);//dead
+                
             }
         }
     }
