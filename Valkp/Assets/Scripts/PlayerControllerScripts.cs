@@ -13,6 +13,7 @@ public class PlayerControllerScripts : MonoBehaviour {
     public GameObject walkCollider;
     public GameObject crouchCollider;
     public GameObject airCollider;
+    public GameObject rollCollider;
 
     // Whether or not a player can steer while jumping;
     private float groundRadius = 0.2f;
@@ -33,6 +34,7 @@ public class PlayerControllerScripts : MonoBehaviour {
         walkCollider.SetActive(true);
         crouchCollider.SetActive(false);
         airCollider.SetActive(false);
+        rollCollider.SetActive(false);
     }
 
     // Update is called once per frame
@@ -59,6 +61,7 @@ public class PlayerControllerScripts : MonoBehaviour {
             walkCollider.SetActive(true);
             crouchCollider.SetActive(false);
             airCollider.SetActive(false);
+            rollCollider.SetActive(false);
 
             //Crouch player
 
@@ -70,6 +73,8 @@ public class PlayerControllerScripts : MonoBehaviour {
                 walkCollider.SetActive(false);
                 crouchCollider.SetActive(true);
                 airCollider.SetActive(false);
+                rollCollider.SetActive(false);
+
                 anim.SetBool("Crouch", true);
             }
             else
@@ -89,6 +94,15 @@ public class PlayerControllerScripts : MonoBehaviour {
                     anim.SetBool("Run", false);
                 }
             }
+
+            if(this.GetComponent<SpriteRenderer>().sprite.name.Substring(0,12) == "RobotBoyRoll")
+            {
+                walkCollider.SetActive(false);
+                crouchCollider.SetActive(false);
+                airCollider.SetActive(false);
+                rollCollider.SetActive(true);
+            }
+
             // If the input is moving the player right and the player is facing left...
             if (move > 0 && !facingRight)
             {
@@ -133,6 +147,7 @@ public class PlayerControllerScripts : MonoBehaviour {
             walkCollider.SetActive(false);
             crouchCollider.SetActive(false);
             airCollider.SetActive(true);
+            rollCollider.SetActive(false);
 
             // If the input is moving the player right and the player is facing left...
             if (move > 0 && !facingRight)
