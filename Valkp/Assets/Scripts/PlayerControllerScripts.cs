@@ -1,15 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerControllerScripts : MonoBehaviour {
+public class PlayerControllerScripts : MonoBehaviour
+{
 
     public float walkSpeed;
     public float runSpeed;
     public float crouchSpeed;
     public Transform groundCheck;
     public LayerMask whatIsGround;
-    public float jumpForce;
-    public float friction;
+    public float jumpForceMax;
+    public float jumpForceAddFrame;
+    public float delayRecupJump;
+    //public float friction;
     public GameObject walkCollider;
     public GameObject crouchCollider;
     public GameObject airCollider;
@@ -18,9 +21,12 @@ public class PlayerControllerScripts : MonoBehaviour {
     // Whether or not a player can steer while jumping;
     private float groundRadius = 0.2f;
     private float jumpSpeed;
+    private float jump;
     private bool facingRight = true;
     private bool grounded = false;
-    private Animator anim;          
+    private bool jumping = false;
+    private bool delayJump = true;
+    private Animator anim;
     private Rigidbody2D m_Rigidbody2D;
 
 
@@ -50,7 +56,7 @@ public class PlayerControllerScripts : MonoBehaviour {
 
         if (grounded)
         {
-          
+
             // The Speed animator parameter is set to the absolute value of the horizontal input.
             anim.SetFloat("Speed", Mathf.Abs(move));
 
@@ -62,6 +68,33 @@ public class PlayerControllerScripts : MonoBehaviour {
             crouchCollider.SetActive(false);
             airCollider.SetActive(false);
             rollCollider.SetActive(false);
+
+
+            //Sprint speed
+
+            if (run == 1 || Input.GetButton("Run"))
+            {
+                anim.SetBool("Run", true);
+                m_Rigidbody2D.velocity = new Vector2(move * runSpeed, m_Rigidbody2D.velocity.y);
+                jumpSpeed = runSpeed;
+                if (crouch == 1 || Input.GetButton("Crouch"))
+                    anim.SetBool("Roll", true);
+                else
+                    anim.SetBool("Roll", false);
+            }
+            else
+            {
+                anim.SetBool("Run", false);
+                anim.SetBool("Roll", false);
+            }
+
+            if (this.GetComponent<SpriteRenderer>().sprite.name.Substring(0, 12) == "RobotBoyRoll")
+            {
+                walkCollider.SetActive(false);
+                crouchCollider.SetActive(false);
+                airCollider.SetActive(false);
+                rollCollider.SetActive(true);
+            }
 
             //Crouch player
 
@@ -75,32 +108,21 @@ public class PlayerControllerScripts : MonoBehaviour {
                 airCollider.SetActive(false);
                 rollCollider.SetActive(false);
 
+                if (run == 1 || Input.GetButton("Run"))
+                {
+                    m_Rigidbody2D.velocity = new Vector2(move * runSpeed, m_Rigidbody2D.velocity.y);
+                    anim.SetBool("Roll", true);
+                    rollCollider.SetActive(true);
+                    crouchCollider.SetActive(false);
+                }
+                else
+                    anim.SetBool("Roll", false);
+
                 anim.SetBool("Crouch", true);
             }
             else
             {
                 anim.SetBool("Crouch", false);
-                
-                //Sprint speed
-
-                if (run == 1 || Input.GetButton("Run"))
-                {
-                    anim.SetBool("Run", true);
-                    m_Rigidbody2D.velocity = new Vector2(move * runSpeed, m_Rigidbody2D.velocity.y);
-                    jumpSpeed = runSpeed;
-                }
-                else
-                {
-                    anim.SetBool("Run", false);
-                }
-            }
-
-            if(this.GetComponent<SpriteRenderer>().sprite.name.Substring(0,12) == "RobotBoyRoll")
-            {
-                walkCollider.SetActive(false);
-                crouchCollider.SetActive(false);
-                airCollider.SetActive(false);
-                rollCollider.SetActive(true);
             }
 
             // If the input is moving the player right and the player is facing left...
@@ -122,19 +144,19 @@ public class PlayerControllerScripts : MonoBehaviour {
         {
             // The Speed animator parameter is set to the absolute value of the horizontal input.
             anim.SetFloat("Speed", Mathf.Abs(move));
-            if(facingRight && Mathf.Abs(move)>0)
-            {
+            m_Rigidbody2D.velocity = new Vector2(move * jumpSpeed, m_Rigidbody2D.velocity.y);
+            /* if (facingRight && Mathf.Abs(move) > 0)
+             {
+                 // Move the character
+                 m_Rigidbody2D.velocity = new Vector2(move * jumpSpeed - friction, m_Rigidbody2D.velocity.y);
+             }
+             else if (Mathf.Abs(move) > 0 && !facingRight)
+             {
+                 // Move the character
+                 m_Rigidbody2D.velocity = new Vector2(move * jumpSpeed + friction, m_Rigidbody2D.velocity.y);
+             }*/
 
-                // Move the character
-                m_Rigidbody2D.velocity = new Vector2(Mathf.MoveTowards(move * jumpSpeed, move * jumpSpeed - friction,1.5f), m_Rigidbody2D.velocity.y);
-            }
-            else if (Mathf.Abs(move) > 0 && !facingRight)
-            {
-                // Move the character
-                m_Rigidbody2D.velocity = new Vector2(Mathf.MoveTowards(move * jumpSpeed, move * jumpSpeed + friction,1.5f), m_Rigidbody2D.velocity.y);
-            }                                
-
-            if(Input.GetButton("Use/Suspend"))
+            if (Input.GetButton("Use/Suspend"))
             {
                 anim.SetBool("Suspend", true);
             }
@@ -160,16 +182,47 @@ public class PlayerControllerScripts : MonoBehaviour {
             {
                 // ... flip the player.
                 Flip();
-            }                        
+            }            
         }
+
+        //Jump gestion  
+
+        if (jumping && (jump <= jumpForceMax))
+        {
+            if (delayJump)
+            {
+                m_Rigidbody2D.AddForce(new Vector2(0, jumpForceAddFrame));
+                jump += jumpForceAddFrame;
+            }
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D other)
+    {
+        if(jumping)
+        {
+            delayJump = false;
+            StartCoroutine(DelayJump());
+            jumping = false;
+            jump = 0;
+        }
+    }
+
+    IEnumerator DelayJump()
+    {
+        yield return new WaitForSeconds(delayRecupJump);
+        delayJump = true;
     }
 
     void Update()
     {
-        if(grounded && Input.GetButtonDown("Jump"))
+        if (grounded && Input.GetButton("Jump"))
         {
-            anim.SetBool("Ground", false);
-            m_Rigidbody2D.AddForce(new Vector2(0, jumpForce));
+            jumping = true;
+        }
+        else
+        {
+            jumping = false;
         }
     }
 
