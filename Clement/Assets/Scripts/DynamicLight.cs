@@ -36,7 +36,7 @@ public class DynamicLight : MonoBehaviour
     // Private variables
     Mesh lightMesh;                                                 // Mesh for our light mesh
     LayerMask layer;
-    MeshCollider DetectLighMesh;
+    
 
     // Called at beginning of script execution
     void Start()
@@ -141,7 +141,7 @@ public class DynamicLight : MonoBehaviour
                         v.endpoint = true;
                     }
 
-                    Debug.DrawLine(transform.position, v.pos, Color.white);
+                    //Debug.DrawLine(transform.position, v.pos, Color.white);
 
                     //--Convert To local space for build mesh (mesh craft only in local vertex)
                     v.pos = transform.InverseTransformPoint(v.pos);
@@ -284,7 +284,7 @@ public class DynamicLight : MonoBehaviour
                             hitp = transform.TransformPoint(dir.normalized * mag);
                         }
 
-                        Debug.DrawLine(fromCast, hitp, Color.green);
+                        //Debug.DrawLine(fromCast, hitp, Color.green);
 
                         verts vL = new verts();
                         vL.pos = transform.InverseTransformPoint(hitp);
@@ -473,11 +473,11 @@ public class DynamicLight : MonoBehaviour
         {
             if (i < (allVertices.Count - 1))
             {
-                Debug.DrawLine(allVertices[i].pos, allVertices[i + 1].pos, new Color(i * 0.02f, i * 0.02f, i * 0.02f));
+                //Debug.DrawLine(allVertices[i].pos, allVertices[i + 1].pos, new Color(i * 0.02f, i * 0.02f, i * 0.02f));
             }
             else
             {
-                Debug.DrawLine(allVertices[i].pos, allVertices[0].pos, new Color(i * 0.02f, i * 0.02f, i * 0.02f));
+                //Debug.DrawLine(allVertices[i].pos, allVertices[0].pos, new Color(i * 0.02f, i * 0.02f, i * 0.02f));
             }
         }
     }
