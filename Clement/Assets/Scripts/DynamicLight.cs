@@ -18,6 +18,7 @@ public class DynamicLight : MonoBehaviour
 
     // Public variables
     public Material lightMaterial;
+    public MeshCollider lightMeshCol;
     [HideInInspector]
     public PolygonCollider2D[] allMeshes;                                   // Array for all of the meshes in our scene
 
@@ -28,15 +29,15 @@ public class DynamicLight : MonoBehaviour
     [SerializeField]
     public float lightRadius = 20f;
 
-    [Range(4, 2000)]
-    public int lightSegments = 2000;
+    [Range(4, 20)]
+    public int lightSegments = 8;
 
 
 
     // Private variables
     Mesh lightMesh;                                                 // Mesh for our light mesh
     LayerMask layer;
-    
+    MeshCollider DetectLighMesh;
 
     // Called at beginning of script execution
     void Start()
@@ -141,7 +142,7 @@ public class DynamicLight : MonoBehaviour
                         v.endpoint = true;
                     }
 
-                    //Debug.DrawLine(transform.position, v.pos, Color.white);
+                    Debug.DrawLine(transform.position, v.pos, Color.white);
 
                     //--Convert To local space for build mesh (mesh craft only in local vertex)
                     v.pos = transform.InverseTransformPoint(v.pos);
@@ -284,7 +285,7 @@ public class DynamicLight : MonoBehaviour
                             hitp = transform.TransformPoint(dir.normalized * mag);
                         }
 
-                        //Debug.DrawLine(fromCast, hitp, Color.green);
+                        Debug.DrawLine(fromCast, hitp, Color.green);
 
                         verts vL = new verts();
                         vL.pos = transform.InverseTransformPoint(hitp);
@@ -308,10 +309,10 @@ public class DynamicLight : MonoBehaviour
 
         //--Step 3: Generate vectors for light cast--//
         //---------------------------------------------------------------------//
-        float theta = 0f;
-        //int theta = 0;
-        float amount = (Mathf.PI * 2) / lightSegments;
-        //int amount = 360 / lightSegments;
+
+        int theta = 0;
+        //float amount = (Mathf.PI * 2) / lightSegments;
+        int amount = 360 / lightSegments;
 
 
 
@@ -473,11 +474,11 @@ public class DynamicLight : MonoBehaviour
         {
             if (i < (allVertices.Count - 1))
             {
-                //Debug.DrawLine(allVertices[i].pos, allVertices[i + 1].pos, new Color(i * 0.02f, i * 0.02f, i * 0.02f));
+                Debug.DrawLine(allVertices[i].pos, allVertices[i + 1].pos, new Color(i * 0.02f, i * 0.02f, i * 0.02f));
             }
             else
             {
-                //Debug.DrawLine(allVertices[i].pos, allVertices[0].pos, new Color(i * 0.02f, i * 0.02f, i * 0.02f));
+                Debug.DrawLine(allVertices[i].pos, allVertices[0].pos, new Color(i * 0.02f, i * 0.02f, i * 0.02f));
             }
         }
     }

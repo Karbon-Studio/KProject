@@ -8,7 +8,7 @@ public class JumpAcroche : MonoBehaviour {
 
     void OnCollisionStay2D(Collision2D other)
     {
-        if (Input.GetButtonDown("Jump")/* && (other.gameObject.tag == "Rebord")*/)
+        if (Input.GetButtonDown("Jump"))
         {
             PlayerControllerScripts playerJ;
             player.GetComponent<Rigidbody2D>().AddForce(new Vector2(0, jumpForce));

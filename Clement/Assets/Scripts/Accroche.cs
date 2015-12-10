@@ -10,20 +10,24 @@ public class Accroche : MonoBehaviour {
     private bool grounded = false;
     
 
-    void FixedUpdate()
+    void Update()
     {
         grounded = Physics2D.OverlapCircle(groundCheck.position, groundRadius, whatIsGround);
         if (grounded)
         {
             handCollider.SetActive(false);
         }
-        if (Input.GetButtonDown("Use/Suspend"))
+        if (!grounded)
         {
-            handCollider.SetActive(true);
-        }
-        else if (Input.GetButtonUp("Use/Suspend"))
-        {
-            handCollider.SetActive(false);
+            if (Input.GetButton("Use/Suspend"))
+            {
+                handCollider.SetActive(true);
+            }
+            else
+            {
+                handCollider.SetActive(false);
+            }
+
         }
     }
 }

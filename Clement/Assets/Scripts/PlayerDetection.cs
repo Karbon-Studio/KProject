@@ -6,19 +6,30 @@ public class PlayerDetection : MonoBehaviour
 {
     public GameObject player;
     public GameObject head;
+    public float dist;
     // Use this for initialization
     void Start()
     {
 
     }
 
+    void Update()
+    {
+
+    }
+
     void OnTriggerStay2D(Collider2D other)
     {
-        if (other.tag == player.tag) // si le joueur entre dans le collider
+        if (other.tag == player.tag)
         {
-            RaycastHit2D hit = Physics2D.Linecast(transform.position, head.transform.position);
-            if (hit.collider.tag == player.tag)  // si le joueur est touchable par la lumiere dans le collider
-                SceneManager.LoadScene(0); //dead
+            Vector2 positionLight = transform.position;
+            Vector2 positionHeadPlayer = head.transform.position;
+            RaycastHit2D hit = Physics2D.Linecast(positionLight, positionHeadPlayer);
+            if (hit.collider.tag == player.tag)
+            {
+                dist = hit.distance;
+                SceneManager.LoadScene(0);
+            }
         }
     }
 }
