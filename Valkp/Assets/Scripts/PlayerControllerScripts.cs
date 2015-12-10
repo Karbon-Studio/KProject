@@ -182,7 +182,7 @@ public class PlayerControllerScripts : MonoBehaviour
             {
                 // ... flip the player.
                 Flip();
-            }            
+            }
         }
 
         //Jump gestion  
@@ -195,18 +195,22 @@ public class PlayerControllerScripts : MonoBehaviour
                 jump += jumpForceAddFrame;
             }
         }
+        else
+        {
+            jump = 0;
+        }
     }
 
     void OnCollisionEnter2D(Collision2D other)
     {
-        if(jumping)
+        if (jumping)
         {
             delayJump = false;
             StartCoroutine(DelayJump());
-            jumping = false;
             jump = 0;
         }
     }
+
 
     IEnumerator DelayJump()
     {
