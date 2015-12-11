@@ -145,16 +145,6 @@ public class PlayerControllerScripts : MonoBehaviour
             // The Speed animator parameter is set to the absolute value of the horizontal input.
             anim.SetFloat("Speed", Mathf.Abs(move));
             m_Rigidbody2D.velocity = new Vector2(move * jumpSpeed, m_Rigidbody2D.velocity.y);
-            /* if (facingRight && Mathf.Abs(move) > 0)
-             {
-                 // Move the character
-                 m_Rigidbody2D.velocity = new Vector2(move * jumpSpeed - friction, m_Rigidbody2D.velocity.y);
-             }
-             else if (Mathf.Abs(move) > 0 && !facingRight)
-             {
-                 // Move the character
-                 m_Rigidbody2D.velocity = new Vector2(move * jumpSpeed + friction, m_Rigidbody2D.velocity.y);
-             }*/
 
             if (Input.GetButton("Use/Suspend"))
             {
@@ -164,8 +154,7 @@ public class PlayerControllerScripts : MonoBehaviour
             {
                 anim.SetBool("Suspend", false);
             }
-
-
+            
             walkCollider.SetActive(false);
             crouchCollider.SetActive(false);
             airCollider.SetActive(true);
