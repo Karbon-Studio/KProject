@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Player\Scriptes\Accroche.cs" />
+    <Compile Include="Assets\Player\Scriptes\Escalade.cs" />
     <Compile Include="Assets\Player\Scriptes\JumpAcroche.cs" />
     <Compile Include="Assets\Player\Scriptes\PlayerControllerScripts.cs" />
     <Compile Include="Assets\Scripts\CameraController.cs" />

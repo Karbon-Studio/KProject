@@ -17,7 +17,6 @@ public class JumpAcroche : MonoBehaviour
     {
         if (Input.GetButtonDown("Jump"))
         {
-            PlayerControllerScripts playerJ;
             player.GetComponent<Rigidbody2D>().AddForce(new Vector2(0, jumpForce));
             anim.SetBool("SuspendJump", true);
         }
