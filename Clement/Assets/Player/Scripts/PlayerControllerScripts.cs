@@ -246,7 +246,7 @@ public class PlayerControllerScripts : MonoBehaviour
 
     void Update()
     {
-        if (grounded && Input.GetButton("Jump"))
+        if (!celled && grounded && Input.GetButton("Jump"))
         {
             jumping = true;
         }
